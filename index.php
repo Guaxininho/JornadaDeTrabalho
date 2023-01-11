@@ -1,3 +1,13 @@
+<?php
+if (isset($_POST['submit'])){
+  $entrada = $_POST['entrada'];
+  $saida = $_POST['saida'];
+} else {
+  $entrada = '00:00';
+  $saida = '00:00';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
@@ -12,28 +22,27 @@
   <body>
     <main id="box">
       <h1>Jornada de trabalho</h1>
-      <form id="box-form">
+      <form id="box-form" method="post" action="./index.php">
         <div class="box-form-flex">
           <label for="box-form-flex-entrada">Digite o horário de entrada</label>
-          <input id="box-form-flex-entrada" type="time" />
+          <input id="box-form-flex-entrada" type="time" name="entrada" />
         </div>
 
         <div class="box-form-flex">
           <label for="box-form-flex-saida">Digite o horário de saída</label>
-          <input id="box-form-flex-saida" type="time" />
+          <input id="box-form-flex-saida" type="time" name="saida" />
         </div>
 
-        <button type="submit">Calcular</button>
+        <button id="calcular" type="submit" name="submit">Calcular</button>
       </form>
 
       <div id="box-result">
-        <div id="horasDia" class="horas">5:00</div>
-        <div id="horasNoite" class="horas">7:00</div>
+        <div id="horasDia" class="horas"><?php echo $entrada ?></div>
+        <div id="horasNoite" class="horas"><?php echo $saida ?></div>
         <img id="sol" src="./img/sol.png" />
         <img id="lua" src="./img/lua.png" />
       </div>
     </main>
-
     <script src="index.js"></script>
   </body>
 </html>

@@ -28,6 +28,7 @@ html {
   padding: 0.5rem 4rem;
   row-gap: 1.5rem;
   border-radius: 0.5rem;
+  max-width: 88.8rem;
 }
 #box h1 {
   grid-column: 1/3;

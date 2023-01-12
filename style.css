@@ -59,6 +59,7 @@ html {
   color: #f8f9fa;
   text-shadow: 0.5px 1.5px 0.8rem rgba(0, 0, 0, 0.5);
   text-align: center;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 #box #box-form .box-form-flex label::first-letter {
   text-transform: uppercase;
@@ -120,6 +121,8 @@ html {
   color: #f8f9fa;
   text-shadow: 0.5px 1.5px 0.8rem rgba(0, 0, 0, 0.5);
   text-align: center;
+  line-height: 5.5rem;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 @media (max-width: 1310px) {

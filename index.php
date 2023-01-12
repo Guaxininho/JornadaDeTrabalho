@@ -1,145 +1,72 @@
 <?php
-// RECEBENDO OS DADOS DO FRONT-END
 
-if (isset($_POST['submit'])){ // Verifica se o botão foi clicado se não foi executa o else que define valores padrões para as variáveis renderizadas
-  $entrada = $_POST['entrada']; // Recebe o valor do input com o name entrada (onde o usuário digita a hora de entrada) e salva em $entrada
-  $saida = $_POST['saida']; // Recebe o valor do input com o name saida (onde o usuário digita a hora de saída) e salva em $saida
+if (isset($_POST['submit'])){ // Se o botão do formulário foi apertado
+  $entradaInput = $_POST['entrada']; // Recebe o valor do input com o name entrada (onde o usuário digita a hora de entrada) e salva dentro de $entradaInput
+  $saidaInput = $_POST['saida']; // Recebe o valor do input com o name saida (onde o usuário digita a hora de saída) e salva dentro de $saidaInput
 
-// DIVIDINDO ELES 4 EM VARIÁVEIS PARA PODER FAZER AS CONTAS
-
-  list($horaEntrada, $minutoEntrada) = explode(':', $entrada); // Separa a string dentro de $entrada em duas variáveis, uma com a hora e outra com os minutos
-  list($horaSaida, $minutoSaida) = explode(':', $saida); // Separa a string dentro de $saida em duas variáveis, uma com a hora e outra com os minutos
-
-
-// CONVERTENDO AS VARIÁVEIS PARA INTEIRO (ELAS CHEGAM COMO STRING)
-
-  $horaEntrada = (int)$horaEntrada; 
-  $minutoEntrada = (int)$minutoEntrada;
-
-  $horaSaida = (int)$horaSaida; 
-  $minutoSaida = (int)$minutoSaida;
+  function jornadaDeTrabalho($inicio, $fim) { // Função que recebe o horário de entrada ($inicio) e o horário de saída ($fim)
+    $horasDiurnas = 0; // inicia a variável que armazena a quantidade de horas trabalhadas no período diurno
+    $horasNoturnas = 0; // inicia a variável que armazena a quantidade de horas trabalhadas no período noturno
+    $tempoAtual = new DateTime("1970-01-01T" . $inicio . ":00"); // Cria uma instância DateTime com o horário de entrada $inicio
+    $tempoFinal = new DateTime("1970-01-01T" . $fim . ":00"); // Cria uma instância DateTime com o horário de saída $fim
 
 
-// CHECKANDO SE A HORA DE ENTRADA É DIURNA OU NOTURNA E SE A HORA DE SAÍDA É DIURNA OU NOTURNA
-// A LÓGICA AQUI É: se a entrada é diurna e a saída é noturna, então os minutos da entrada são diurnos e os da saída noturnos, sendo assim mais tarde eu vou separar os minutos em dois grupos, minutos diurnos e minutos noturnos, diurnos com diurnos somam, e noturnos com noturnos também, mas diurno e noturno não, porque são pagos de forma diferente
-
-if($horaEntrada >= 5 && $horaEntrada < 22 ){ // 
-  $minutoEntradaDiurno=  $minutoEntrada;
-  $minutoEntradaNoturno = 0;
-
-} else { 
-  $minutoEntradaNoturno = $minutoEntrada; 
-  $minutoEntradaDiurno = 0;
-} 
-
-if($horaSaida >= 5 && $horaSaida < 22 ){ 
-  $minutoSaidaDiurno = $minutoSaida;
-  $minutoSaidaNoturno = 0;
-
-} else { 
-  $minutoSaidaNoturno = $minutoSaida;
-  $minutoSaidaDiurno = 0;
-} 
-
-// AQUI CONFERE SE ENTRAR E SAIR NA MESMA HORA DO TRABALHO, NÃO PODE SOMAR OS MINUTOS, TEM QUE SUBTRAIR, CASO CONTRÁRIO OS MINUTOS DA MESMA CATEGORIA (DIURNO OU NOTURNO) SÃO SOMADOS, SE CHEGAM A 60, UMA HORA É ADICIONADA E 60 MINUTOS É REMOVIDO DOS MINUTOS
-
-if($horaEntrada == $horaSaida){
-$somaDosMinutosDiurnos =  $minutoSaidaDiurno - $minutoEntradaDiurno;
-$somaDosMinutosNoturnos = $minutoSaidaNoturno - $minutoEntradaNoturno;
-} else {
-  $somaDosMinutosDiurnos = $minutoEntradaDiurno + $minutoSaidaDiurno;  // Lógica diurna
-  if($somaDosMinutosDiurnos >= 60){ 
-    $horaSaida++;
-    $somaDosMinutosDiurnos = $somaDosMinutosDiurnos - 60; 
-  } else {
-    $somaDosMinutosDiurnos = $somaDosMinutosDiurnos; 
-  }
-
-  $somaDosMinutosNoturnos = $minutoEntradaNoturno + $minutoSaidaNoturno;  // Lógica noturna
-  if($somaDosMinutosNoturnos >= 60){ 
-    $horaSaida++; 
-    $somaDosMinutosNoturnos = $somaDosMinutosNoturnos - 60; 
-  } else {
-    $somaDosMinutosNoturnos = $somaDosMinutosNoturnos; 
-  }
-}
-
-// APÓS A SOMA SE ALGUM MINUTO ESTIVER ABAIXO DE 10 E ACIMA DE 0 VAI SER ADICIONADO UM 0 A FRENTE
-
-if($somaDosMinutosDiurnos < 10 && $somaDosMinutosDiurnos > 0){
-  $somaDosMinutosDiurnos = '0' . $somaDosMinutosDiurnos;
-}
-
-if($somaDosMinutosNoturnos < 10 && $somaDosMinutosNoturnos > 0){
-  $somaDosMinutosNoturnos = '0' . $somaDosMinutosNoturnos;
-}
-
-// AQUI EU FAÇO UM TRATAMENTO, SE OS MINUTOS TERMINAREM EM 0 DEVIDO DEVIDO A UMA SOMA, EU FAÇO ELES SEREM IGUAIS A 00, PARA QUE NÃO APAREÇA 0 MINUTOS, APENAS UM DETALHE VISUAL
-
-if($somaDosMinutosDiurnos == 0){
-  $somaDosMinutosDiurnos = '00';
-}
-
-if($somaDosMinutosNoturnos == 0){
-  $somaDosMinutosNoturnos = '00';
-}
+    $tempoAtual = intval($tempoAtual->format('H')) * 60 + intval($tempoAtual->format('i')); // Converte o horário de entrada ($inicio) para minutos
+    $tempoFinal = intval($tempoFinal->format('H')) * 60 + intval($tempoFinal->format('i')); // Converte o horário de saída ($fim) para minutos
 
 
-// AQUI COMEÇA O TRATAMENTO DAS HORAS, SEPARANDO 2 LISTAS DE HORAS (DIURNAS E NOTURNAS), ELAS INICIAM VAZIAS
-$diurno = []; 
-$noturno = [];
 
-// EM SEGUIDA ATRAVÉS DE UM LOOP EU USO A HORA DE ENTRADA COMO ÍNDICE, SEMPRE QUE A HORA ÍNDICE FOR MENOR QUE 5 OU MAIOR QUE 22, ELA É ADICIONADA NA LISTA DE HORAS NOTURNAS, SE FOR ENTRE 5 E 22, ELA É ADICIONADA NA LISTA DE HORAS DIURNAS, SE FOR IGUAL A 5 OU 22, ELA É ADICIONADA NAS DUAS LISTAS, E POR ÚLTIMO, SE A HORA ÍNDICE FOR IGUAL A HORA DE SAÍDA, O LOOP É QUEBRADO E O CÁLCULO É FINALIZADO
+  
+    if ($tempoAtual < $tempoFinal) { // Se o horário de entrada em minutos for menor que o horário de saída em minutos entra aqui
+        while ($tempoAtual < $tempoFinal) { // Enquanto o horário de entrada em minutos for menor que o horário de saída em minutos o loop roda
+            if ($tempoAtual >= 5 * 60 && $tempoAtual < 22 * 60) { // Se o horário de entrada for maior ou igual a 5:00 e menor que 22:00
+                $horasDiurnas += 1; // Adiciona 1 minuto na variável $horasDiurnas
+            } else { // Se não
+                $horasNoturnas += 1; // Adiciona 1 minuto na variável $horasNoturnas
+            }
+            $tempoAtual += 1; // De qualquer forma adiciona 1 minuto no horário de entrada só de ter entrado aqui, assim o loop não fica infinito
+        }
 
-  $i = $horaEntrada; 
-  while(true){
-    if($i == 25){
-      $i = 0;
-    } else if ($i > 5 && $i < 22){
-      array_push($diurno, $i);
-    } else if ($i == 5 || $i == 22){
-      array_push($diurno, $i);
-      array_push($noturno, $i);
-    } else {
-      array_push($noturno, $i);
-    }
+        $horasDiurnas = date("H:i",mktime(0, $horasDiurnas)); // Converte a variável $horasDiurnas que esta apenas em minutos para o formato Hora:Minuto
+        $horasNoturnas = date("H:i",mktime(0, $horasNoturnas)); // Converte a variável $horasNoturnas que esta apenas em minutos para o formato Hora:Minuto
+        return array("horadiurna" => $horasDiurnas, "horanoturna" => $horasNoturnas); // Retorna uma lista associativa com a variável $horasDiurnas ligada a chave horadiurna e a variável $horasNoturnas ligada a chave horanoturna
 
-    if($i == $horaSaida){
-      break;
-    } else {
-      $i++;
+
+    } else { // Se o horário de entrada for maior que o horário de saída em minutos entra aqui
+        while ($tempoAtual < 24 * 60) { // Enquanto o horário de entrada for menor que 24:00 o loop roda
+            if ($tempoAtual >= 5 * 60 && $tempoAtual < 22 * 60) { // Se o horário de entrada for maior ou igual a 5:00 e menor que 22:00
+                $horasDiurnas += 1; // Adiciona 1 minuto na variável $horasDiurnas
+            } else { // Se não
+                $horasNoturnas += 1; // Adiciona 1 minuto na variável $horasNoturnas
+            }
+            $tempoAtual += 1; // De qualquer forma adiciona 1 minuto no horário de entrada só de ter entrado aqui, assim o loop não fica infinito
+        }
+  
+        $tempoAtual = 0; // Zera a variável $tempoAtual (ou o que era o $inicio)
+        while ($tempoAtual < $tempoFinal) { // Enquanto o horário de entrada for menor que o horário de saída o loop roda
+            if ($tempoAtual >= 5 * 60 && $tempoAtual < 22 * 60) { // Se o horário de entrada for maior ou igual a 5:00 e menor que 22:00
+                $horasDiurnas += 1; // Adiciona 1 minuto na variável $horasDiurnas
+            } else { // Se não
+                $horasNoturnas += 1; // Adiciona 1 minuto na variável $horasNoturnas
+            } 
+            $tempoAtual += 1; // De qualquer forma adiciona 1 minuto no horário de entrada só de ter entrado aqui, assim o loop não fica infinito
+        }
+
+        $horasDiurnas = date("H:i",mktime(0, $horasDiurnas)); // Converte a variável $horasDiurnas para o formato Hora:Minuto
+        $horasNoturnas = date("H:i",mktime(0, $horasNoturnas)); // Converte a variável $horasNoturnas para o formato Hora:Minuto
+        return array("horadiurna" => $horasDiurnas, "horanoturna" => $horasNoturnas); // Retorna uma lista associativa com a variável $horasDiurnas ligada a chave horadiurna e a variável $horasNoturnas ligada a chave horanoturna
     }
   }
 
-// AQUI CONTA QUANTAS HORAS TEM EM CADA LISTA
+  $inicio = $entradaInput; // A variável $inicio recebe o valor da variável $entradaInput que estava recebendo o valor do input 
+  $fim = $saidaInput; // A variável $fim recebe o valor da variável $saidaInput que estava recebendo o valor do input
+  
+  $resultado = jornadaDeTrabalho($inicio, $fim); // A variável $resultado recebe o retorno da chamada da função jornadaDeTrabalho, que é um array, dentro dela tem as variáveis $horasDiurnas e $horasNoturnas que serão renderizadas no front no horário diurno e horário noturno respectivamente. Os parâmetros para ela são o horário de entrada e o horário de saída que são passados pelo front
+} 
 
-  $DiurnoRenderizado = sizeof($diurno);
-  $NoturnoRenderizado = sizeof($noturno);   
-
-// AQUI EU FAÇO UM TRATAMENTO, SE AS HORAS TERMINAREM EM 0 EU FAÇO ELAS SEREM IGUAIS A 00, PARA QUE NÃO APAREÇA 0 HORAS, SE NÃO FOR 0, REDUZO EM UM A HORA, PARA QUE APAREÇA O INTERVALO DE HORAS CORRETO, E POR ÚLTIMO EU CONCATENO OS MINUTOS COM AS HORAS, PARA QUE APAREÇA O RESULTADO FINAL
-
-  if($DiurnoRenderizado == 0){
-    $DiurnoRenderizado = '00' . ':' . $somaDosMinutosDiurnos;
-  } else {
-    $DiurnoRenderizado = $DiurnoRenderizado - 1;
-    $DiurnoRenderizado = $DiurnoRenderizado . ':' . $somaDosMinutosDiurnos;
+  else{
+    $resultado = ["horadiurna" => "00:00", "horanoturna" => "00:00"]; // Quando a aplicação inicia tem que existir um valor para $horasDiurnas e $horasNoturnas para que o front não retorne erro, já que ele tenta renderizar o valor de $horasDiurnas e $horasNoturnas antes de o usuário clicar no botão calcular
   }
-
-  if($NoturnoRenderizado == 0){
-    $NoturnoRenderizado = '00' . ':' . $somaDosMinutosNoturnos;
-  } else {
-    $NoturnoRenderizado = $NoturnoRenderizado - 1;
-    $NoturnoRenderizado = $NoturnoRenderizado . ':' . $somaDosMinutosNoturnos;
-  }
-
-
-} else {
-  $DiurnoRenderizado = '00:00';
-  $NoturnoRenderizado = '00:00';
-}
-
-
-
 
 ?>
 
@@ -172,8 +99,8 @@ $noturno = [];
       </form>
 
       <div id="box-result">
-        <div id="horasDia" class="horas"><?php echo $DiurnoRenderizado ?></div>
-        <div id="horasNoite" class="horas"><?php echo $NoturnoRenderizado ?></div>
+        <div id="horasDia" class="horas">Horas diurnas <?php echo $resultado["horadiurna"]; ?></div>
+        <div id="horasNoite" class="horas">Horas noturnas <?php echo $resultado["horanoturna"]; ?></div>
         <img id="sol" src="./img/sol.png" />
         <img id="lua" src="./img/lua.png" />
       </div>

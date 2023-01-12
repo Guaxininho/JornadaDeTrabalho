@@ -6,3 +6,4 @@
 <p>Este projeto foi um exercício para uma vaga de trabalho, para utilizar a aplicação é só clonar o repositório e inserir a pasta dentro de um servidor que possa rodar PHP,
 eu usei o xampp. Se não souber qual usar baixe o xampp e dentro da pasta dele procure a pasta htdocs, cole a pasta lá. Depois abra seu navegador e navegue até localhost/JornadaDeTrabalho/index.php, pronto.</p>
 
+<img height="300em" src="https://user-images.githubusercontent.com/104655361/212072553-6d6ad242-583c-4f18-87e4-e1df51448358.gif">

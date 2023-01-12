@@ -16,10 +16,62 @@ if (isset($_POST['submit'])){
   // $ValorEntrada = $_POST['entrada']; // pegando o valor da entrada inserida
 
   $horaEntrada = (int)$horaEntrada; // convertendo para inteiro (numero) porque é uma string (essa é a hora que ele começou a trabalhar)
+  $minutoEntrada = (int)$minutoEntrada;
+
   $horaSaida = (int)$horaSaida; // convertendo para inteiro (numero) porque é uma string (essa é a hora que ele terminou de trabalhar)
+  $minutoSaida = (int)$minutoSaida;
+
+
+  // $somaDosMinutos = $minutoEntrada + $minutoSaida; // somando os minutos 
+  // if($somaDosMinutos >= 60){ // se a soma dos minutos for maior ou igual a 60
+  //   $horaSaida++; // adiciona uma hora
+  //   $minutoSaida = $somaDosMinutos - 60; // subtrai 60 dos minutos
+  // } else {
+  //   $minutoFinal = $somaDosMinutos; // se não, os minutos serão a soma dos minutos que ele digitou
+  // }
 
   $diurno = []; // array para armazenar os horarios diurnos
   $noturno = []; // array para armazenar os horarios noturnos
+
+  // CENÁRIOS DE ENTRADA E SAÍDA
+
+if($horaEntrada >= 5 && $horaEntrada <= 22 ){ // entrou de dia
+  $minutoEntradaDiurno=  $minutoEntrada;
+  $minutoEntradaNoturno = 0;
+  // minutos da entrada aqui são diurnos
+} else { // entrou de noite 
+  $minutoEntradaNoturno = $minutoEntrada; 
+  $minutoEntradaDiurno = 0;
+} 
+
+if($horaSaida >= 5 && $horaSaida <= 22 ){ // saiu de dia
+  $minutoSaidaDiurno = $minutoSaida;
+  $minutoSaidaNoturno = 0;
+  // minutos da entrada aqui são diurnos
+} else { // saiu de noite 
+  $minutoSaidaNoturno = $minutoSaida;
+  $minutoSaidaDiurno = 0;
+} 
+
+// minutos diurnos e noturnos não se somam, porque não pertencem ao mesmo pagamento
+// mas diurnos com diurnos somam, e noturnos com noturnos também
+
+  $somaDosMinutosDiurnos = $minutoEntradaDiurno + $minutoSaidaDiurno; // somando os minutos diurnos
+  if($somaDosMinutosDiurnos >= 60){ // se a soma dos minutos diurnos for maior ou igual a 60
+    $horaSaida++; // adiciona uma hora a saída
+    $somaDosMinutosDiurnos = $somaDosMinutosDiurnos - 60; // subtrai 60 dos minutos diurnos
+  } else {
+    $somaDosMinutosDiurnos = $somaDosMinutosDiurnos; // se não, os minutos serão a soma dos minutos que ele digitou
+  }
+
+  $somaDosMinutosNoturnos = $minutoEntradaNoturno + $minutoSaidaNoturno; // somando os minutos noturnos
+  if($somaDosMinutosNoturnos >= 60){ // se a soma dos minutos noturnos for maior ou igual a 60
+    $horaSaida++; // adiciona uma hora a saída
+    $somaDosMinutosNoturnos = $somaDosMinutosNoturnos - 60; // subtrai 60 dos minutos noturnos
+  } else {
+    $somaDosMinutosNoturnos = $somaDosMinutosNoturnos; // se não, os minutos serão a soma dos minutos que ele digitou
+  }
+
 
   $i = $horaEntrada; // o índice será baseado na hora que ele entrou (prefiro usar o índice para facilitar a lógica)
   while(true){
@@ -41,27 +93,42 @@ if (isset($_POST['submit'])){
     }
   }
 
+
+
+  if($somaDosMinutosDiurnos == 0){
+    $somaDosMinutosDiurnos = '00';
+  }
+
+  if($somaDosMinutosNoturnos == 0){
+    $somaDosMinutosNoturnos = '00';
+  }
+
+
   $DiurnoRenderizado = sizeof($diurno);
   $NoturnoRenderizado = sizeof($noturno);   
 
   if($DiurnoRenderizado == 0){
-    $DiurnoRenderizado = '00:00';
+    $DiurnoRenderizado = '00' . ':' . $somaDosMinutosDiurnos;
   } else {
-    $DiurnoRenderizado = sizeof($diurno) - 1;
+    $DiurnoRenderizado = $DiurnoRenderizado - 1;
+    $DiurnoRenderizado = $DiurnoRenderizado . ':' . $somaDosMinutosDiurnos;
   }
 
   if($NoturnoRenderizado == 0){
-    $NoturnoRenderizado = '00:00';
+    $NoturnoRenderizado = '00' . ':' . $somaDosMinutosNoturnos;
   } else {
-    $NoturnoRenderizado = sizeof($noturno) - 1;
+    $NoturnoRenderizado = $NoturnoRenderizado - 1;
+    $NoturnoRenderizado = $NoturnoRenderizado . ':' . $somaDosMinutosNoturnos;
   }
-
 
 
 } else {
   $DiurnoRenderizado = '00:00';
   $NoturnoRenderizado = '00:00';
 }
+
+
+// na minha mente funciona assim: se a entrada é diurna e a saída é noturna, então os minutos da entrada são diurnos e os da saída noturnos e vice versa
 
 ?>
 

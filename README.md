@@ -9,11 +9,10 @@
    <li>Agora abra o seu navegador e inseria o seguinte link na barra de endereços: localhost/JornadaDeTrabalho/</li>
 </ul>
 
-<img height="300em" src="https://user-images.githubusercontent.com/104655361/212072553-6d6ad242-583c-4f18-87e4-e1df51448358.gif">
+<img height="300em" src="https://user-images.githubusercontent.com/104655361/212176689-66aa3401-4391-47ad-9576-0cfe08fd7145.gif">
 
 <p>Pronto, neste momento a aplicação já está funcionando. Agora é só inserir o horário de entrada e o de saída e clicar no botão "Calcular". Espero que goste</p>
 
 <h2>Observação:</h2>
-<p>Gostaria de ter feito este projeto em SPA (Single page application), porque sei consumir API em React, porém ainda não sei criar API no PHP, então decidi focar o projeto mais em PHP e usei o javascript apenas para autenticação de formulário e efeitos visuais.</p>
-
+<p>Gostaria de ter feito este projeto em SPA (Single page application), porque sei consumir API em React, porém ainda não sei criar API no PHP, então decidi focar o projeto mais em PHP e usei o Javascript apenas para validação de formulário e efeitos visuais.</p>
 

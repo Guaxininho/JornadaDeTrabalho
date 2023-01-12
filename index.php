@@ -84,7 +84,7 @@ if (isset($_POST['submit'])){ // Se o botão do formulário foi apertado
   <body>
     <main id="box">
       <h1>Jornada de trabalho</h1>
-      <form id="box-form" method="post" action="./index.php">
+      <form id="box-form" method="post">
         <div class="box-form-flex">
           <label for="box-form-flex-entrada">Digite o horário de entrada</label>
           <input id="box-form-flex-entrada" type="time" name="entrada" />

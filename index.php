@@ -2,7 +2,7 @@
 if (isset($_POST['submit'])){
   $entrada = $_POST['entrada'];
   $saida = $_POST['saida'];
-<<<<<<< HEAD
+
 
   list($horaEntrada, $minutoEntrada) = explode(':', $entrada);
   list($horaSaida, $minutoSaida) = explode(':', $saida);
@@ -63,14 +63,6 @@ if (isset($_POST['submit'])){
   $NoturnoRenderizado = '00:00';
 }
 
-
-
-=======
-} else {
-  $entrada = '00:00';
-  $saida = '00:00';
-}
->>>>>>> 592c2aba8fb22565330aa84aaac8d5940433638c
 ?>
 
 <!DOCTYPE html>
@@ -102,13 +94,8 @@ if (isset($_POST['submit'])){
       </form>
 
       <div id="box-result">
-<<<<<<< HEAD
         <div id="horasDia" class="horas"><?php echo $DiurnoRenderizado ?></div>
         <div id="horasNoite" class="horas"><?php echo $NoturnoRenderizado ?></div>
-=======
-        <div id="horasDia" class="horas"><?php echo $entrada ?></div>
-        <div id="horasNoite" class="horas"><?php echo $saida ?></div>
->>>>>>> 592c2aba8fb22565330aa84aaac8d5940433638c
         <img id="sol" src="./img/sol.png" />
         <img id="lua" src="./img/lua.png" />
       </div>
